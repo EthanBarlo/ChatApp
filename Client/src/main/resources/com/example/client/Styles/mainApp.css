@@ -1,0 +1,64 @@
+
+
+
+
+/* Channel Selector area*/
+.labelLight{
+    -fx-text-fill: -background;
+    -fx-background-color: -foreground;
+}
+.buttonLight{
+    -fx-background-color: -backgroundDarker;
+    -fx-text-fill: -foreground;
+    -fx-background-radius: 15px;
+    -fx-cursor: hand;
+}
+.channelSelectorBarContainer{
+    -fx-background-color: -foreground;
+}
+
+/* ListView Stuff */
+.ListView{
+    -fx-background-color: -background;
+}
+.ListCell:hover{
+    -fx-background-color: -foregroundDarker;
+}
+
+
+
+/* Message pane area */
+.detailsArea{
+    -fx-background-color: -foreground;
+}
+.table-view{
+    -fx-background-color: -background;
+}
+.table-column{
+/* TODO check if this is needed*/
+}
+.messageSent{
+    -fx-alignment: right;
+    -fx-background-color: -foreground;
+    -fx-text-fill: -background;
+    -fx-border-radius: 15px;
+}
+.messageReceived{
+    -fx-alignment: left;
+    -fx-background-color: -backgroundDarker;
+    -fx-text-fill: -foreground;
+    -fx-border-radius: 15px;
+}
+
+.buttonDark{
+    -fx-background-color: -foreground;
+    -fx-text-fill: -background;
+    -fx-background-radius: 15px;
+    -fx-cursor: hand;
+}
+.inputAreaBackground{
+    -fx-background-color: -background;
+}
+.messageInputBox{
+
+}

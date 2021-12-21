@@ -36,7 +36,13 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <version>${junit.version}</version>
       <scope>test</scope>
-    </dependency>              </dependencies>
+    </dependency>
+      <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-base</artifactId>
+          <version>17.0.0.1</version>
+      </dependency>
+  </dependencies>
 
   <build>
         <plugins>
@@ -58,7 +64,7 @@
             <!-- Default configuration for running with: mvn clean javafx:run -->
             <id>default-cli</id>
             <configuration>
-              <mainClass>com.example.client/com.example.client.HelloApplication</mainClass>
+              <mainClass>com.example.client/com.example.client.ClientStart</mainClass>
             </configuration>
           </execution>
         </executions>
