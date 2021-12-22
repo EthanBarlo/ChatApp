@@ -45,7 +45,7 @@ public class Server extends Thread{
 
     private boolean HandleClientLogin(Socket clientSocket) throws IOException{
         BufferedReader _FromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        PrintWriter _ToClient = new PrintWriter(clientSocket.getOutputStream());
+        PrintWriter _ToClient = new PrintWriter(clientSocket.getOutputStream(), true);
 
         String rawInput = null;
         boolean waitingForRequest = true;
@@ -54,23 +54,24 @@ public class Server extends Thread{
             if(rawInput != null)
                 waitingForRequest = false;
         }
+        System.out.println("REQUEST - " + rawInput);
 
         JSONObject json = (JSONObject) JSONValue.parse(rawInput);
         if(!json.get("_class").toString().equals("OpenRequest")){
-            _ToClient.println(new ErrorResponse("Invalid Request, Expecting an OpenRequest"));
+            _ToClient.println(new ErrorResponse("Invalid Request, Expecting an OpenRequest").toJSONString());
             return false;
         }
 
         ClientDetails clientDetails = VerifyLoginDetails(json);
         if(clientDetails == null){
-            _ToClient.println(new ErrorResponse("User credentials were invalid."));
+            _ToClient.println(new ErrorResponse("User credentials were invalid.").toJSONString());
             return false;
         }
 
         ClientThread clientThread = new ClientThread(this, clientSocket, clientDetails);
         connectedClients.add(clientThread);
         clientThread.start();
-        _ToClient.println(new SuccessResponse());
+        _ToClient.println(new SuccessResponse().toJSONString());
         return true;
     }
 

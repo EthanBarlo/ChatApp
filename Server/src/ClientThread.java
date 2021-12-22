@@ -34,7 +34,6 @@ public class ClientThread extends Thread{
     public void run(){
         try{
             HandleClientRequest();
-            Thread.sleep(100);
         }catch (Exception e){
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -44,6 +43,8 @@ public class ClientThread extends Thread{
     private void HandleClientRequest() throws IOException, InterruptedIOException{
         String jsonRequest;
         while((jsonRequest = _FromClient.readLine()) != null){
+            System.out.println(details.getUsername() + ": REQUEST - " + jsonRequest);
+
             JSONObject json = (JSONObject) JSONValue.parse(jsonRequest);
             Request request;
             // TODO: 20/12/2021 Switch to set the request type

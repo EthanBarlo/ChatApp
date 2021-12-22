@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ServerData {
+public class ServerData implements Serializable{
     private HashMap<String, ClientDetails> clientAccounts;
     private HashMap<String, Channel> channelDictionary = new HashMap<>() {{
         put("General", new Channel("General"));

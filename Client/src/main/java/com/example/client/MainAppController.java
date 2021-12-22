@@ -11,6 +11,8 @@ import javafx.scene.layout.BorderPane;
 import java.net.URL;
 
 public class MainAppController {
+    private Server server;
+
     @FXML
     private ListView<?> ChannelListView;
 
@@ -38,7 +40,7 @@ public class MainAppController {
 
     @FXML
     void SendMessage(ActionEvent event) {
-
+        server.SendRequest(new OpenRequest("asdasd", "asdasd"));
     }
 
     @FXML
@@ -51,5 +53,9 @@ public class MainAppController {
     void SetThemeLight(ActionEvent event) {
         rootPane.getStylesheets().remove(1);
         rootPane.getStylesheets().add(getClass().getResource("Styles/lightTheme.css").toExternalForm());
+    }
+
+    public void SetServer(Server server){
+        this.server = server;
     }
 }

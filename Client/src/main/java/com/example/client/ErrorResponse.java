@@ -1,3 +1,5 @@
+package com.example.client;
+
 import org.json.simple.JSONObject;
 
 public class ErrorResponse extends Response {
