@@ -8,19 +8,16 @@ public class ServerController {
         server.start();
 
         Scanner _Input = new Scanner(System.in);
-//        while (true) {
-//            String command = _Input.nextLine();
-//            switch (command) {
-//                case "quit" -> {
-//                    server.Stop();
-//                    System.exit(0);
-//                }
-//            }
-//        }
+        while (true) {
+            String command = _Input.nextLine();
+            switch (command) {
+                case "stop" -> {
+                    server.Stop();
+                    System.exit(0);
+                }
+            }
 
-        String username = _Input.nextLine();
-        String password = _Input.nextLine();
-        serverData.getClientAccounts().put(username, new ClientDetails(username, password));
-        serverData.SaveData();
+        }
+
     }
 }
