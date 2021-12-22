@@ -22,4 +22,11 @@ public class Channel implements Serializable {
 
     public void Subscribe(ClientDetails client) {SubscribedClients.add(client);}
     public void Unsubscribe(ClientDetails client) {SubscribedClients.remove(client);}
+
+    public void PublishMessage(Message message){
+        messages.add(message);
+        SubscribedClients.forEach(client -> {
+            client.ChannelMessageUpdate(name, message);
+        });
+    }
 }

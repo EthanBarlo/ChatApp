@@ -28,7 +28,8 @@ public class OpenRequest extends Request{
         return new OpenRequest(username, password);
     }
 
-    public Response DoRequest(ClientThread client){
+    public Response DoRequest(ClientDetails client){
+        // DoRequest is only called from ClientThread, which is only instantiated when a user has logged in.
         return new ErrorResponse("An OpenRequest was sent while client is already signed in!");
     }
 }

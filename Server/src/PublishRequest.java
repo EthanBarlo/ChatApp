@@ -1,5 +1,3 @@
-package com.example.client;
-
 import org.json.simple.JSONObject;
 
 public class PublishRequest extends Request{
@@ -28,11 +26,15 @@ public class PublishRequest extends Request{
         return jsonObject;
     }
 
-    // TODO: 22/12/2021 REMOVE FROM METHOD SINCE THE CLIENT DOESNT NEED IT
     public static PublishRequest fromJSON(JSONObject jsonObject){
         String identity = (String) jsonObject.get("identity");
         String to = (String) jsonObject.get("to");
         Message message = Message.fromJSON(jsonObject.get("message"));
         return new PublishRequest(identity, to, message);
+    }
+
+    public Response DoRequest(ClientDetails client){
+        client.PublishNewMessage(to, message);
+        return new SuccessResponse();
     }
 }

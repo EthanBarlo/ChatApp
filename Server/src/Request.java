@@ -4,5 +4,5 @@ public abstract class Request implements JSONAware{
     public abstract Object toJSON();
     public String toJSONString() { return toJSON().toString(); }
     public String toString() { return toJSONString(); }
-    public abstract Response DoRequest(ClientThread client);
+    public abstract Response DoRequest(ClientDetails client);
 }

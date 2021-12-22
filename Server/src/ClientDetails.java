@@ -9,7 +9,7 @@ public class ClientDetails implements Serializable {
     private final String password;
 
     private Map<String, Channel> subscribedChannels;
-    private Map<String, Message> newMessages;
+    private Map<String, List<Message>> newMessages;
 
     public ClientDetails(String username, String password){
         this.username = username;
@@ -21,7 +21,7 @@ public class ClientDetails implements Serializable {
     public String getUsername() {return username;}
     public String getPassword() {return password;}
     public List<Channel> getSubscribedChannels() {return new ArrayList<>(subscribedChannels.values());}
-    public Map<String, Message> getNewMessages() {return newMessages;}
+    public Map<String, List<Message>> getNewMessages() {return newMessages;}
 
     public void Subscribe(String channelName, Server server){
         Channel channel = server.getChannel(channelName);
@@ -38,6 +38,16 @@ public class ClientDetails implements Serializable {
         subscribedChannels.remove(channelName);
         channel.Unsubscribe(this);
     }
+
+    public void PublishNewMessage(String channelName, Message message){
+        subscribedChannels.get(channelName).PublishMessage(message);
+    }
+
+    public void ChannelMessageUpdate(String channelName, Message message){
+        newMessages.get(channelName).add(message);
+    }
+
+
     // TODO: 21/12/2021 Add method to collect new messages, the channel will loop through and add it to each client.
     // TODO: This would mean that the user does not need to be logged in to keep track of messages;
 }
