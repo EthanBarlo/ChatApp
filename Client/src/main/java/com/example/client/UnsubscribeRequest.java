@@ -24,7 +24,6 @@ public class UnsubscribeRequest extends Request{
         return jsonObject;
     }
 
-    // TODO: 22/12/2021 REMOVE THIS 
     public static UnsubscribeRequest fromJSON(JSONObject jsonObject){
         String identity = (String) jsonObject.get("identity");
         String channel = (String) jsonObject.get("channel");

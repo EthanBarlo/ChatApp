@@ -1,5 +1,3 @@
-package com.example.client;
-
 import org.json.simple.JSONObject;
 
 public class SubscribeRequest extends Request{
@@ -28,5 +26,13 @@ public class SubscribeRequest extends Request{
         String identity = (String) jsonObject.get("identity");
         String channel = (String) jsonObject.get("channel");
         return new SubscribeRequest(identity, channel);
+    }
+
+    public Response DoRequest(ClientDetails client){
+        String errorMessage = client.Subscribe(channel);
+        if(errorMessage != null)
+            return new ErrorResponse(errorMessage);
+        
+        return new SuccessResponse();
     }
 }

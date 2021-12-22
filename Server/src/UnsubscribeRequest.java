@@ -1,13 +1,11 @@
-package com.example.client;
-
 import org.json.simple.JSONObject;
 
-public class SubscribeRequest extends Request{
-    private static final String _class = SubscribeRequest.class.getSimpleName();
-    private final String identity; // Client
+public class UnsubscribeRequest extends Request{
+    private static final String _class = UnsubscribeRequest.class.getSimpleName();
+    private final String identity;
     private final String channel;
 
-    public SubscribeRequest(String identity, String channel){
+    public UnsubscribeRequest(String identity, String channel){
         this.identity = identity;
         this.channel = channel;
     }
@@ -24,9 +22,17 @@ public class SubscribeRequest extends Request{
         return jsonObject;
     }
 
-    public static SubscribeRequest fromJSON(JSONObject jsonObject){
+    public static UnsubscribeRequest fromJSON(JSONObject jsonObject){
         String identity = (String) jsonObject.get("identity");
         String channel = (String) jsonObject.get("channel");
-        return new SubscribeRequest(identity, channel);
+        return new UnsubscribeRequest(identity, channel);
+    }
+
+    public Response DoRequest(ClientDetails client){
+        String errorMessage = client.Unsubscribe(channel);
+        if(errorMessage != null)
+            return new ErrorResponse(errorMessage);
+
+        return new SuccessResponse();
     }
 }

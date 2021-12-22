@@ -67,6 +67,7 @@ public class Server extends Thread{
             _ToClient.println(new ErrorResponse("User credentials were invalid.").toJSONString());
             return false;
         }
+        clientDetails.SetServer(this);
 
         ClientThread clientThread = new ClientThread(this, clientSocket, clientDetails);
         connectedClients.add(clientThread);

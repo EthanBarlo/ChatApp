@@ -1,6 +1,6 @@
-package com.example.client;
-
 import org.json.simple.JSONObject;
+
+import java.util.List;
 
 public class GetRequest extends  Request{
     private static final String _class = GetRequest.class.getSimpleName();
@@ -33,5 +33,12 @@ public class GetRequest extends  Request{
         String from = (String) jsonObject.get("from");
         int after = (int) jsonObject.get("after");
         return new GetRequest(identity, from, after);
+    }
+
+    public Response DoRequest(ClientDetails client){
+        List<Message> messages =  client.GetMessagesAfter(from, after);
+        if(messages == null)
+            return new ErrorResponse("GetRequest failed!");
+        return new MessageListResponse(messages);
     }
 }

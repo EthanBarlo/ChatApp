@@ -34,7 +34,9 @@ public class PublishRequest extends Request{
     }
 
     public Response DoRequest(ClientDetails client){
-        client.PublishNewMessage(to, message);
+        String errorMessage = client.PublishNewMessage(to, message);
+        if(errorMessage != null)
+            return new ErrorResponse(errorMessage);
         return new SuccessResponse();
     }
 }
