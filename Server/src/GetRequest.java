@@ -31,7 +31,7 @@ public class GetRequest extends  Request{
     public static GetRequest fromJSON(JSONObject jsonObject){
         String identity = (String) jsonObject.get("identity");
         String from = (String) jsonObject.get("from");
-        int after = (int) jsonObject.get("after");
+        int after = (int)((long) jsonObject.get("after"));
         return new GetRequest(identity, from, after);
     }
 

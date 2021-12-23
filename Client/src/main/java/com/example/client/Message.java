@@ -30,8 +30,7 @@ public class Message implements Serializable {
         return jsonObject.toJSONString();
     }
 
-    public static Message fromJSON(Object object){
-        JSONObject jsonObject = (JSONObject) object;
+    public static Message fromJSON(JSONObject jsonObject){
         String from = (String) jsonObject.get("from");
         long when = (long) jsonObject.get("when");
         String body = (String) jsonObject.get("body");

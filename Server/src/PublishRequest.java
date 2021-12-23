@@ -1,4 +1,5 @@
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 public class PublishRequest extends Request{
     private static final String _class = PublishRequest.class.getSimpleName();
@@ -29,7 +30,7 @@ public class PublishRequest extends Request{
     public static PublishRequest fromJSON(JSONObject jsonObject){
         String identity = (String) jsonObject.get("identity");
         String to = (String) jsonObject.get("to");
-        Message message = Message.fromJSON(jsonObject.get("message"));
+        Message message = Message.fromJSON((JSONObject) JSONValue.parse((String)jsonObject.get("message")));
         return new PublishRequest(identity, to, message);
     }
 

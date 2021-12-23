@@ -1,12 +1,12 @@
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ClientDetails implements Serializable {
-    private final String username;
-    private final String password;
+    private String username;
+    private String password;
     private Server server;
     private Map<String, Channel> subscribedChannels;
     private Map<String, List<Message>> newMessages;
@@ -28,13 +28,16 @@ public class ClientDetails implements Serializable {
 
 
     //region Subscribe Methods
-    public void ChannelMessageUpdate(String channelName, Message message){newMessages.get(channelName).add(message);}
+    public void ChannelMessageUpdate(String channelName, Message message){
+        newMessages.get(channelName).add(message);
+    }
     public String Subscribe(String channelName){
         Channel channel = server.getChannel(channelName);
         if(channel == null)
             return "Channel does not exist!";
 
         subscribedChannels.put(channelName, channel);
+        newMessages.put(channelName, new ArrayList<>());
         channel.Subscribe(this);
         return null;
     }
@@ -65,4 +68,25 @@ public class ClientDetails implements Serializable {
         messages = channel.getMessagesAfter(index);
         return messages;
     }
+
+
+    @Serial
+    private void writeObject(ObjectOutputStream _Output) throws IOException {
+        _Output.writeObject(username);
+        _Output.writeObject(password);
+        _Output.writeObject(subscribedChannels);
+        _Output.writeObject(newMessages);
+    }
+
+    @Serial
+    private void readObject(ObjectInputStream _Input) throws ClassNotFoundException, IOException {
+        this.username = (String) _Input.readObject();
+        this.password = (String) _Input.readObject();
+        this.subscribedChannels = (Map<String, Channel>) _Input.readObject();
+        this.newMessages = (Map<String, List<Message>>) _Input.readObject();
+    }
+
+
+
+
 }

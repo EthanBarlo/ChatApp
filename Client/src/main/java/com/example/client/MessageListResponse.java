@@ -2,6 +2,7 @@ package com.example.client;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class MessageListResponse extends Response {
     public static MessageListResponse fromJSON(JSONObject jsonObject){
         JSONArray jsonMessages =  (JSONArray) jsonObject.get("messages");
         List<Message> messages = new ArrayList<>();
-        jsonMessages.forEach(jsonMessage -> messages.add(Message.fromJSON(jsonMessage)));
+        jsonMessages.forEach(jsonMessage -> messages.add(Message.fromJSON((JSONObject) JSONValue.parse((String)jsonMessage))));
         return new MessageListResponse(messages);
     }
 }

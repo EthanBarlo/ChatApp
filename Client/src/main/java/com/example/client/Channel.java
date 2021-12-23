@@ -20,4 +20,11 @@ public class Channel {
     public void AddNewMessages(List<Message> newMessages){
         messages.addAll(newMessages);
     }
+
+    public void GetNewMessages(Server server){
+        Response response = server.SendRequest(new GetRequest(server.getUsername(), name, messages.size()));
+        if(!(response instanceof MessageListResponse))
+            return;
+        messages.addAll(((MessageListResponse) response).getMessages());
+    }
 }

@@ -21,6 +21,10 @@ public class Server extends Thread{
         this.data = data;
         this._channels = data.getChannelDictionary();
         this._clientData = data.getClientAccounts();
+
+        _clientData.values().forEach(client -> {
+            client.SetServer(this);
+        });
     }
 
     @Override

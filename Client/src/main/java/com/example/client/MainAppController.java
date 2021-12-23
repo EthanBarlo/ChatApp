@@ -1,10 +1,11 @@
 package com.example.client;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,7 +30,7 @@ public class MainAppController {
     @FXML
     private ListView<String> ChannelListView;
     private Map<String, Channel> mapOfChannels = new HashMap<>();
-    private ObservableMap<String, Channel> observableChannelList = FXCollections.observableMap(mapOfChannels);
+    private ObservableList<String> channelNames = FXCollections.observableList(new ArrayList<>());
     private String selectedChannel;
     @FXML
     private TextArea MessageInput;
@@ -45,10 +46,17 @@ public class MainAppController {
 
     @FXML
     void initialize() {
+        ChannelListView.setItems(channelNames);
         ChannelListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
                 selectedChannel = t1;
+                Channel channel = mapOfChannels.get(selectedChannel);
+                channel.GetNewMessages(server);
+                ObservableList<Message> messages = channel.getMessages();
+
+                MessagesTable.setItems(messages);
+                MessagesColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getBody()));
             }
         });
     }
@@ -78,10 +86,14 @@ public class MainAppController {
 
     @FXML
     void SendMessage(ActionEvent event) {
-        String message = MessageInput.getText();
+        String messageText = MessageInput.getText();
+        Message messageData = new Message(server.getUsername(), System.currentTimeMillis() / 1000L, messageText);
+        Response response = server.SendRequest(new PublishRequest(server.getUsername(), selectedChannel, messageData));
 
-//
-//        server.SendRequest(new PublishRequest())
+        if(!(response instanceof SuccessResponse)){
+            return;
+        }
+        mapOfChannels.get(selectedChannel).GetNewMessages(server);
     }
 
     @FXML
@@ -99,6 +111,7 @@ public class MainAppController {
 
     public void AddSubscribedChannel(Channel channel){
         mapOfChannels.put(channel.getName(), channel);
+        channelNames.add(channel.getName());
     }
 
     public void Setup(Server server){
@@ -122,9 +135,7 @@ public class MainAppController {
                 mapOfChannels.put(channel, new Channel(messages, channel));
             }
         });
-
-        ObservableList<String> listOfChannels = FXCollections.observableList(((StringListResponse) response).getData());
-        ChannelListView.setItems(listOfChannels);
+        channelNames.addAll(((StringListResponse) response).getData());
     }
 
     public void CheckForUpdates(){
