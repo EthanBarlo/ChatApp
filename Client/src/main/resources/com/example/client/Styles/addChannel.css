@@ -16,14 +16,18 @@
 }
 .list-cell{
     -fx-background-color: -background;
+    -fx-text-fill: -foregroundDarker;
     -fx-font-size: 16px;
     -fx-text-alignment: center;
 }
 .list-cell:hover{
     -fx-background-color: -backgroundDarker;
+    -fx-text-fill: -foreground;
+
 }
 .list-cell:selected{
     -fx-background-color: -foregroundDarker;
+    -fx-text-fill: -background;
 }
 
 

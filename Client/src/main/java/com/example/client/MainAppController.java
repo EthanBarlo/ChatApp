@@ -1,6 +1,7 @@
 package com.example.client;
 
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ListChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
@@ -11,6 +12,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
@@ -62,6 +64,8 @@ public class MainAppController {
 
     @FXML
     void initialize() {
+        updateChecker.interrupt();
+        updateChecker.setDaemon(true);
         ChannelListView.setItems(channelNames);
         ChannelListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -78,9 +82,19 @@ public class MainAppController {
                 MessagesTable.setItems(messages);
                 MessagesColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(generateMessagePane(data.getValue())));
 
-                updateChecker.start();
+                if(updateChecker.isInterrupted())
+                    updateChecker.start();
+
+                MessagesTable.getItems().addListener(new ListChangeListener<Message>(){
+                    @Override
+                    public void onChanged(javafx.collections.ListChangeListener.Change<? extends Message> c) {
+                        Platform.runLater( () -> MessagesTable.scrollTo(c.getList().size()-1) );
+                    }
+                });
             }
         });
+
+
     }
 
     Pane generateMessagePane(Message message){

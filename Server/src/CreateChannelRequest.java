@@ -26,6 +26,7 @@ public class CreateChannelRequest extends  Request{
         server.createChannel(name);
         if(server.getChannel(name) == null)
             return new ErrorResponse("Channel could not be created.");
+        client.Subscribe(name);
         return new SuccessResponse();
     }
 }

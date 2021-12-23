@@ -22,18 +22,20 @@
     -fx-background-color: -backgroundDarker;
 }
 .list-cell{
-    -fx-background-color: -backgroundDarker;
+    -fx-background-color: -background;
+    -fx-text-fill: -foregroundDarker;
     -fx-font-size: 16px;
     -fx-text-alignment: center;
 }
 .list-cell:hover{
-    -fx-background-color: -background;
+    -fx-background-color: -backgroundDarker;
+    -fx-text-fill: -foreground;
+
 }
 .list-cell:selected{
     -fx-background-color: -foregroundDarker;
+    -fx-text-fill: -background;
 }
-
-
 
 
 /* Message pane area */
@@ -42,9 +44,6 @@
 }
 .table-view{
     -fx-background-color: -background;
-}
-.table-column{
-/* TODO check if this is needed*/
 }
 .messageSent{
     -fx-alignment: right;

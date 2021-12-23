@@ -113,6 +113,8 @@ public class Server extends Thread{
         return _channels.get(channelName);
     }
     public synchronized Channel createChannel(String channelName){
+        if(_channels.get(channelName) != null)
+            return null;
         Channel newChannel = new Channel(channelName);
         _channels.put(channelName, newChannel);
         return newChannel;
