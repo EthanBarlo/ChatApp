@@ -88,6 +88,10 @@ public class Server extends Thread{
         ClientDetails clientDetails = _clientData.get(username);
         if(clientDetails == null){
             clientDetails = new ClientDetails(username, password);
+            _channels.put(username, new Channel(username));
+            clientDetails.SetServer(this);
+            clientDetails.Subscribe(username);
+
             _clientData.put(username, clientDetails);
         }
         if(!clientDetails.getPassword().equals(password)){
@@ -97,18 +101,18 @@ public class Server extends Thread{
     }
 
 
-    public void RemoveClient(ClientThread client){
+    public synchronized void RemoveClient(ClientThread client){
         connectedClients.remove(client);
     }
 
     // Channel Methods
-    public List<String> getChannelNames(){
+    public synchronized List<String> getChannelNames(){
         return new ArrayList<String>(_channels.keySet());
     }
-    public Channel getChannel(String channelName){
+    public synchronized Channel getChannel(String channelName){
         return _channels.get(channelName);
     }
-    public Channel createChannel(String channelName){
+    public synchronized Channel createChannel(String channelName){
         Channel newChannel = new Channel(channelName);
         _channels.put(channelName, newChannel);
         return newChannel;

@@ -15,15 +15,15 @@ public class Channel implements Serializable {
     }
 
     public String getName() {return name;}
-    public List<Message> getMessages() {return messages;}
+    public synchronized List<Message> getMessages() {return messages;}
 
     public int getMessagesLength() {return messages.size();}
     public List<Message> getMessagesAfter(int index){return messages.subList(index, messages.size());}
 
-    public void Subscribe(ClientDetails client) {SubscribedClients.add(client);}
-    public void Unsubscribe(ClientDetails client) {SubscribedClients.remove(client);}
+    public synchronized void Subscribe(ClientDetails client) {SubscribedClients.add(client);}
+    public synchronized void Unsubscribe(ClientDetails client) {SubscribedClients.remove(client);}
 
-    public void PublishMessage(Message message){
+    public synchronized void PublishMessage(Message message){
         messages.add(message);
         SubscribedClients.forEach(client -> {
             client.ChannelMessageUpdate(name, message);

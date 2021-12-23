@@ -1,27 +1,23 @@
 package com.example.client;
 
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.event.ActionEvent;
+import javafx.scene.text.Text;
+import javafx.geometry.Insets;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import java.io.IOException;
@@ -55,6 +51,15 @@ public class MainAppController {
     @FXML
     private BorderPane rootPane;
 
+    Thread updateChecker = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while(true){
+                UpdateChannelContents();
+            }
+        }
+    });
+
     @FXML
     void initialize() {
         ChannelListView.setItems(channelNames);
@@ -62,12 +67,18 @@ public class MainAppController {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
                 selectedChannel = t1;
+                if(selectedChannel == null){
+                    updateChecker.interrupt();
+                    return;
+                }
                 Channel channel = mapOfChannels.get(selectedChannel);
                 channel.GetNewMessages(server);
                 ObservableList<Message> messages = channel.getMessages();
 
                 MessagesTable.setItems(messages);
                 MessagesColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(generateMessagePane(data.getValue())));
+
+                updateChecker.start();
             }
         });
     }
@@ -168,16 +179,17 @@ public class MainAppController {
 
     @FXML
     void SetThemeDark(ActionEvent event) {
+        server.setCurrentTheme("darkTheme");
         rootPane.getStylesheets().remove(1);
         rootPane.getStylesheets().add(getClass().getResource("Styles/darkTheme.css").toExternalForm());
     }
 
     @FXML
     void SetThemeLight(ActionEvent event) {
+        server.setCurrentTheme("lightTheme");
         rootPane.getStylesheets().remove(1);
         rootPane.getStylesheets().add(getClass().getResource("Styles/lightTheme.css").toExternalForm());
     }
-
 
     public void AddSubscribedChannel(Channel channel){
         mapOfChannels.put(channel.getName(), channel);
@@ -194,19 +206,19 @@ public class MainAppController {
         List<String> channelList = ((StringListResponse) response).getData();
         channelList.forEach(channel -> {
             if(mapOfChannels.get(channel) == null){
-                // TODO: 23/12/2021 DECIDE WHETHER TO KEEP THIS OR NOT
-//                List<Message> messages;
-//                Response messageList = server.SendRequest(new GetRequest(server.getUsername(), channel, 0));
-//                if(messageList instanceof MessageListResponse)
-//                    messages = ((MessageListResponse) messageList).getMessages();
-//                else
-//                    messages = new ArrayList<>();
-
                 List<Message> messages = new ArrayList<>();
                 mapOfChannels.put(channel, new Channel(messages, channel));
             }
         });
         channelNames.addAll(((StringListResponse) response).getData());
+    }
 
+    public void UpdateChannelContents(){
+        try{
+            mapOfChannels.get(selectedChannel).GetNewMessages(server);
+            Thread.sleep(3000);
+        }catch (InterruptedException ie){
+            ie.printStackTrace();
+        }
     }
 }

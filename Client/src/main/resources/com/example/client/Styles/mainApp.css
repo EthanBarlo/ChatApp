@@ -19,15 +19,15 @@
 
 /* ListView Stuff */
 .ListView{
-    -fx-background-color: -background;
+    -fx-background-color: -backgroundDarker;
 }
 .list-cell{
-    -fx-background-color: -background;
+    -fx-background-color: -backgroundDarker;
     -fx-font-size: 16px;
     -fx-text-alignment: center;
 }
 .list-cell:hover{
-    -fx-background-color: -backgroundDarker;
+    -fx-background-color: -background;
 }
 .list-cell:selected{
     -fx-background-color: -foregroundDarker;

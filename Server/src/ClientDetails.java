@@ -28,7 +28,7 @@ public class ClientDetails implements Serializable {
 
 
     //region Subscribe Methods
-    public void ChannelMessageUpdate(String channelName, Message message){
+    public synchronized void ChannelMessageUpdate(String channelName, Message message){
         newMessages.get(channelName).add(message);
     }
     public String Subscribe(String channelName){
@@ -85,8 +85,4 @@ public class ClientDetails implements Serializable {
         this.subscribedChannels = (Map<String, Channel>) _Input.readObject();
         this.newMessages = (Map<String, List<Message>>) _Input.readObject();
     }
-
-
-
-
 }

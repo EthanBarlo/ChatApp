@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -20,6 +21,10 @@ public class AddChannelController {
 
     @FXML
     private TextField TextField;
+
+    @FXML
+    private AnchorPane rootPane;
+
 
     @FXML
     void initialize() {
@@ -63,6 +68,10 @@ public class AddChannelController {
     void Setup(Server server, MainAppController mainAppController){
         this.server = server;
         this.mainAppController = mainAppController;
+
+        rootPane.getStylesheets().remove(1);
+        rootPane.getStylesheets().add(getClass().getResource("Styles/"+ server.getCurrentTheme() +".css").toExternalForm());
+
         Response response = server.SendRequest(new GetChannelsRequest("all"));
         if(!(response instanceof StringListResponse)){
             TextField.setText("Error, list could not load.");

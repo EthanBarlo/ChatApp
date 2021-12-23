@@ -17,6 +17,9 @@ public class Server{
     private BufferedReader _FromServer;
 
     private String username;
+    private String currentTheme = "lightTheme";
+    public String getCurrentTheme() {return currentTheme;}
+    public void setCurrentTheme(String currentTheme) {this.currentTheme = currentTheme;}
     public String getUsername() {return username;}
     public void setUsername(String username) {this.username = username;}
 
@@ -31,9 +34,20 @@ public class Server{
     }
 
     public Response SendRequest(Request request){
-        if(IsInUse) return null;
-        IsInUse = true;
+        while(IsInUse){
+            try{
+                Thread.sleep(100);
+            }catch (InterruptedException ie){
+                ie.printStackTrace();
+            }
+        }
+        Response response = GetResponse(request);
+        IsInUse = false;
+        return response;
+    }
 
+    private Response GetResponse(Request request){
+        IsInUse = true;
         System.out.println("REQUEST - " + request.toJSONString());
         _ToServer.println(request.toJSONString());
         String rawResponse = null;
@@ -55,7 +69,6 @@ public class Server{
             case "StringListResponse" -> {return StringListResponse.fromJSON(jsonObject);}
             default -> {return new ErrorResponse("Response was class - " + jsonObject.get("_class"));}
         }
-
     }
 
     public void Close(){
