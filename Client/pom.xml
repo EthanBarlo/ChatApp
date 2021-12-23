@@ -42,6 +42,12 @@
           <artifactId>javafx-base</artifactId>
           <version>17.0.0.1</version>
       </dependency>
+      <dependency>
+          <groupId>commons-lang</groupId>
+          <artifactId>commons-lang</artifactId>
+          <version>20030203.000129</version>
+          <scope>compile</scope>
+      </dependency>
   </dependencies>
 
   <build>

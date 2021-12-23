@@ -9,6 +9,7 @@ import javafx.collections.ObservableSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
@@ -16,8 +17,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,9 +83,29 @@ public class MainAppController {
     }
 
     @FXML
+    void RemoveChannel(ActionEvent event) {
+        String channelName = selectedChannel;
+        Response response = server.SendRequest(new UnsubscribeRequest(server.getUsername(), channelName));
+        if(!(response instanceof SuccessResponse))
+            return;
+        mapOfChannels.remove(channelName);
+        channelNames.remove(channelName);
+    }
+
+    @FXML
     void AttachFile(ActionEvent event) {
 
-    }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select file to attach");
+        File file = fileChooser.showOpenDialog((Stage)((Node)event.getSource()).getScene().getWindow());
+        
+        Message message = new Message(server.getUsername(), System.currentTimeMillis() / 1000L, file.getName(), file);
+        Response response = server.SendRequest(new PublishRequest(server.getUsername(), selectedChannel, message));
+        if(!(response instanceof SuccessResponse))
+            return;
+        // TODO: 23/12/2021 FINISH THIS
+
+    }   
 
     @FXML
     void SendMessage(ActionEvent event) {
@@ -93,6 +116,7 @@ public class MainAppController {
         if(!(response instanceof SuccessResponse)){
             return;
         }
+        MessageInput.setText("");
         mapOfChannels.get(selectedChannel).GetNewMessages(server);
     }
 
@@ -124,23 +148,19 @@ public class MainAppController {
         List<String> channelList = ((StringListResponse) response).getData();
         channelList.forEach(channel -> {
             if(mapOfChannels.get(channel) == null){
-                List<Message> messages;
-                Response messageList = server.SendRequest(new GetRequest(server.getUsername(), channel, 0));
+                // TODO: 23/12/2021 DECIDE WHETHER TO KEEP THIS OR NOT
+//                List<Message> messages;
+//                Response messageList = server.SendRequest(new GetRequest(server.getUsername(), channel, 0));
+//                if(messageList instanceof MessageListResponse)
+//                    messages = ((MessageListResponse) messageList).getMessages();
+//                else
+//                    messages = new ArrayList<>();
 
-                if(messageList instanceof MessageListResponse)
-                    messages = ((MessageListResponse) messageList).getMessages();
-                else
-                    messages = new ArrayList<>();
-
+                List<Message> messages = new ArrayList<>();
                 mapOfChannels.put(channel, new Channel(messages, channel));
             }
         });
         channelNames.addAll(((StringListResponse) response).getData());
-    }
 
-    public void CheckForUpdates(){
-        while(true){
-            // TODO: 23/12/2021 LOVE THIS HAVE FUN, Check whats new and get it... SEE pretty simple am i right!
-        }
     }
 }

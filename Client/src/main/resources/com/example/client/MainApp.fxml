@@ -54,7 +54,12 @@
          <bottom>
             <AnchorPane prefHeight="67.0" prefWidth="272.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button alignment="CENTER" contentDisplay="CENTER" layoutX="56.0" layoutY="12.0" mnemonicParsing="false" onAction="#AddChannel" styleClass="buttonLight" text="Add Channel" textAlignment="CENTER" textFill="#6e3cbc">
+                  <Button alignment="CENTER" contentDisplay="CENTER" layoutX="140.0" layoutY="12.0" mnemonicParsing="false" onAction="#AddChannel" prefHeight="43.0" prefWidth="105.0" styleClass="buttonLight" text="Add" textAlignment="CENTER" textFill="#6e3cbc">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Button>
+                  <Button alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="12.0" mnemonicParsing="false" onAction="#RemoveChannel" prefHeight="43.0" prefWidth="107.0" styleClass="buttonLight" text="Remove" textAlignment="CENTER" textFill="#6e3cbc">
                      <font>
                         <Font name="System Bold" size="20.0" />
                      </font>
