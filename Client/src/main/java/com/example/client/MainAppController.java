@@ -168,15 +168,11 @@ public class MainAppController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select file to attach");
         File file = fileChooser.showOpenDialog((Stage)((Node)event.getSource()).getScene().getWindow());
-        
+
         Message message = new Message(server.getUsername(), System.currentTimeMillis() / 1000L, file.getName(), file);
         Response response = server.SendRequest(new PublishRequest(server.getUsername(), selectedChannel, message));
 
-        if(!(response instanceof SuccessResponse))
-            return;
-
-        mapOfChannels.get(selectedChannel).GetNewMessages(server);
-    }   
+    }
 
     @FXML
     void SendMessage(ActionEvent event) {
@@ -188,7 +184,6 @@ public class MainAppController {
             return;
 
         MessageInput.setText("");
-        mapOfChannels.get(selectedChannel).GetNewMessages(server);
     }
 
     @FXML
@@ -206,6 +201,8 @@ public class MainAppController {
     }
 
     public void AddSubscribedChannel(Channel channel){
+        if(mapOfChannels.get(channel.getName()) != null)
+            return;
         mapOfChannels.put(channel.getName(), channel);
         channelNames.add(channel.getName());
     }
