@@ -25,5 +25,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-engine:1.7.1" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-base:17.0.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-base:win:17.0.0.1" level="project" />
+    <orderEntry type="library" name="Maven: commons-lang:commons-lang:20030203.000129" level="project" />
   </component>
 </module>

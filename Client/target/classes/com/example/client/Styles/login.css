@@ -1,0 +1,18 @@
+.root{
+    -fx-background-color: -background;
+}
+
+.labelText{
+    -fx-text-fill: -foregroundDarker;
+}
+
+.userInput{
+    -fx-background-color: -background;
+    -fx-border-color: -foregroundDarker;
+    -fx-border-width: 0px 0px 2px 0px;
+}
+
+.loginButton{
+    -fx-background-color: -foreground;
+    -fx-cursor: hand;
+}
