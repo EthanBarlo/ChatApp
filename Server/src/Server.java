@@ -32,9 +32,7 @@ public class Server extends Thread{
             System.out.println("port: " + portNumber);
             while(true){
                 Socket clientSocket = socket.accept();
-                if(HandleClientLogin(clientSocket))
-                    System.out.println("New client connected. ID - " + clientSocket.getInetAddress());
-                else
+                if(!HandleClientLogin(clientSocket))
                     clientSocket.close();
             }
         }catch (IOException e){
@@ -73,6 +71,8 @@ public class Server extends Thread{
         connectedClients.add(clientThread);
         clientThread.start();
         _ToClient.println(new SuccessResponse().toJSONString());
+
+        System.out.println("New client connected - ID: " + clientDetails.getUsername());
         return true;
     }
 

@@ -3,6 +3,7 @@ import org.json.simple.JSONValue;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -34,8 +35,11 @@ public class ClientThread extends Thread{
     public void run(){
         try{
             HandleClientRequest();
+        }catch (SocketException e){
+            System.out.println(details.getUsername() + ": Disconnected from the server.");
+            server.RemoveClient(this);
+            interrupt();
         }catch (Exception e){
-            System.out.println(e.getMessage());
             e.printStackTrace();
         }
     }
@@ -46,10 +50,25 @@ public class ClientThread extends Thread{
             System.out.println(details.getUsername() + ": REQUEST - " + jsonRequest);
 
             JSONObject json = (JSONObject) JSONValue.parse(jsonRequest);
-            Request request;
-            // TODO: 20/12/2021 Switch to set the request type
+            Request request = null;
+            switch (json.get("_class").toString()){
+                case "GetRequest" -> { request = GetRequest.fromJSON(json); }
+                case "OpenRequest" -> { request = OpenRequest.fromJSON(json); }
+                case "PublishRequest" -> { request = PublishRequest.fromJSON(json); }
+                case "SubscribeRequest" -> {request = SubscribeRequest.fromJSON(json); }
+                case "UnsubscribeRequest" -> {request = UnsubscribeRequest.fromJSON(json);}
+                case "GetChannelsRequest" -> { request = GetChannelsRequest.fromJSON(json); }
+                case "CreateChannelRequest" -> { request = CreateChannelRequest.fromJSON(json); }
+            }
 
             Response response;
+            if(request == null)
+                response = new ErrorResponse("Invalid Request!");
+            else
+                response = request.DoRequest(details);
+
+            System.out.println(details.getUsername() + ": RESPONSE - " +response.toJSONString());
+            _ToClient.println(response.toJSONString());
         }
     }
 

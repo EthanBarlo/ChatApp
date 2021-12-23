@@ -16,6 +16,10 @@ public class Server{
     private PrintWriter _ToServer;
     private BufferedReader _FromServer;
 
+    private String username;
+    public String getUsername() {return username;}
+    public void setUsername(String username) {this.username = username;}
+
     public Server(String hostname, int port){
         try{
             socket = new Socket(hostname, port);
@@ -47,6 +51,8 @@ public class Server{
         switch (jsonObject.get("_class").toString()){
             case "SuccessResponse" -> {return SuccessResponse.fromJSON(jsonObject);}
             case "ErrorResponse" -> {return ErrorResponse.fromJSON(jsonObject);}
+            case "MessageListResponse" -> {return MessageListResponse.fromJSON(jsonObject);}
+            case "StringListResponse" -> {return StringListResponse.fromJSON(jsonObject);}
             default -> {return new ErrorResponse("Response was class - " + jsonObject.get("_class"));}
         }
 

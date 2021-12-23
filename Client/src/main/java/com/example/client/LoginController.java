@@ -34,12 +34,13 @@ public class LoginController {
             return;
         }
 
+        server.setUsername(username);
 
         try{
             FXMLLoader fxmlLoader = new FXMLLoader(ClientStart.class.getResource("MainApp.fxml"));
             Parent mainAppParent = fxmlLoader.load();
             MainAppController mainAppController = fxmlLoader.getController();
-            mainAppController.SetServer(server);
+            mainAppController.Setup(server);
 
             Scene mainAppScene = new Scene(mainAppParent);
             Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();

@@ -23,6 +23,7 @@ public class ClientDetails implements Serializable {
     public String getPassword() {return password;}
     public Server getServer() {return server;}
     public List<Channel> getSubscribedChannels() {return new ArrayList<>(subscribedChannels.values());}
+    public List<String> getSubscribedChannelNames(){ return new ArrayList<>(subscribedChannels.keySet()); }
     public Map<String, List<Message>> getNewMessages() {return newMessages;}
 
 
