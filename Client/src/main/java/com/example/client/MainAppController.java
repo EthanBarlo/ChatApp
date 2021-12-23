@@ -1,31 +1,39 @@
 package com.example.client;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.ListView;
+import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-
-import java.io.File;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import java.io.IOException;
 import java.util.ArrayList;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.Node;
 import java.util.HashMap;
+import javafx.fxml.FXML;
 import java.util.List;
 import java.util.Map;
+import java.io.File;
 
 public class MainAppController {
     private Server server;
@@ -39,7 +47,7 @@ public class MainAppController {
     private TextArea MessageInput;
 
     @FXML
-    private TableColumn<Message, String> MessagesColumn;
+    private TableColumn<Message, Pane> MessagesColumn;
 
     @FXML
     private TableView<Message> MessagesTable;
@@ -59,9 +67,43 @@ public class MainAppController {
                 ObservableList<Message> messages = channel.getMessages();
 
                 MessagesTable.setItems(messages);
-                MessagesColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getBody()));
+                MessagesColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(generateMessagePane(data.getValue())));
             }
         });
+    }
+
+    Pane generateMessagePane(Message message){
+        Pane pane = new Pane();
+        VBox vbox = new VBox();
+        Text text = new Text(message.getFrom() + ": " +message.getBody());
+
+        vbox.setPadding(new Insets(5, 15, 5, 15));
+        if(message.getFrom().equals(server.getUsername())){
+            vbox.getStyleClass().add("messageContainerUser");
+            text.getStyleClass().add("messageTextUser");
+        }
+        else{
+            vbox.getStyleClass().add("messageContainerOther");
+            text.getStyleClass().add("messageTextOther");
+        }
+        vbox.getChildren().add(text);
+        pane.getChildren().add(vbox);
+
+        if(message.getFile() != null){
+            String[] splitted = message.getBody().split("\\.");
+            String fileExtension = splitted[1];
+            if(!fileExtension.equals("jpg"))
+                return pane;
+            Image image = new Image(message.getFile().toURI().toString());
+            ImageView imageView = new ImageView();
+            imageView.setImage(image);
+            imageView.setPreserveRatio(true);
+            imageView.setFitWidth(800);
+            if(imageView.getFitHeight() > 500)
+                imageView.setFitHeight(500);
+            vbox.getChildren().add(imageView);
+        }
+        return pane;
     }
 
     @FXML
@@ -76,6 +118,7 @@ public class MainAppController {
             Stage window = new Stage();
             window.setTitle("Add Channel");
             window.setScene(addChannel);
+            window.setResizable(false);
             window.show();
         }catch(IOException ie){
             ie.printStackTrace();
@@ -94,6 +137,8 @@ public class MainAppController {
 
     @FXML
     void AttachFile(ActionEvent event) {
+        if(selectedChannel == null)
+            return;
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select file to attach");
@@ -101,10 +146,11 @@ public class MainAppController {
         
         Message message = new Message(server.getUsername(), System.currentTimeMillis() / 1000L, file.getName(), file);
         Response response = server.SendRequest(new PublishRequest(server.getUsername(), selectedChannel, message));
+
         if(!(response instanceof SuccessResponse))
             return;
-        // TODO: 23/12/2021 FINISH THIS
 
+        mapOfChannels.get(selectedChannel).GetNewMessages(server);
     }   
 
     @FXML
@@ -113,9 +159,9 @@ public class MainAppController {
         Message messageData = new Message(server.getUsername(), System.currentTimeMillis() / 1000L, messageText);
         Response response = server.SendRequest(new PublishRequest(server.getUsername(), selectedChannel, messageData));
 
-        if(!(response instanceof SuccessResponse)){
+        if(!(response instanceof SuccessResponse))
             return;
-        }
+
         MessageInput.setText("");
         mapOfChannels.get(selectedChannel).GetNewMessages(server);
     }

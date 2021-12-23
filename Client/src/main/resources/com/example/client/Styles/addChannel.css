@@ -14,9 +14,18 @@
 .ListView{
     -fx-background-color: -background;
 }
-.ListCell:hover{
+.list-cell{
+    -fx-background-color: -background;
+    -fx-font-size: 16px;
+    -fx-text-alignment: center;
+}
+.list-cell:hover{
+    -fx-background-color: -backgroundDarker;
+}
+.list-cell:selected{
     -fx-background-color: -foregroundDarker;
 }
+
 
 .root{
     -fx-background-color: -backgroundDarker;

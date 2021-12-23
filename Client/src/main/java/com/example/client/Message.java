@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import javafx.scene.layout.Pane;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -29,13 +30,14 @@ public class Message implements Serializable {
             this.body = body;
             this.file = null;
         }
-        // TODO: 15/12/2021 ADD IMAGE SENDING!
 
         public String getFrom(){ return from; }
         public String getBody() { return body; }
         public long getWhen() {return when;}
+        public File getFile() {return file;}
 
-        @SuppressWarnings("unchecked")
+
+    @SuppressWarnings("unchecked")
         public String toJSONString(){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("_class", _class);
@@ -57,7 +59,7 @@ public class Message implements Serializable {
             return jsonObject.toJSONString();
         }
 
-        public static com.example.client.Message fromJSON(JSONObject jsonObject){
+        public static Message fromJSON(JSONObject jsonObject){
             String from = (String) jsonObject.get("from");
             long when = (long) jsonObject.get("when");
             String body = (String) jsonObject.get("body");
@@ -83,6 +85,6 @@ public class Message implements Serializable {
             }
 
             File file = new File("clientData/"+body);
-            return new com.example.client.Message(from, when, body, file);
+            return new Message(from, when, body, file);
         }
 }

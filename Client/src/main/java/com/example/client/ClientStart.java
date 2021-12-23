@@ -15,6 +15,7 @@ public class ClientStart extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 444, 296);
         stage.setTitle("Login");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 
