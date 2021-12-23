@@ -20,3 +20,13 @@ Compile the Server
 Run the server
 - java -cp "out/production/ChatApp;Librarys/json-simple-1.1.16.jar" ServerController
 
+
+To run the client open the Client folder within 'Intelij Idea' and run it through the interface there.
+I could not find how to compile javaFx projects so this is how it will have to be done unfortunatly.
+
+Link to video demonstration -
+https://youtu.be/3Yw0ivtqv74
+
+
+Link to github, just in case its easier to set up by cloning it from github.
+https://github.com/Serumz/ChatApp
